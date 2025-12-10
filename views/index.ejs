@@ -3,11 +3,53 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <p>Bem vindo ao app de criação de <%= title %>s</p>
 
+    <form action="/submit" method="POST" class="container">
+      <div class="row">
+        <div class="input-field col s5">
+          <input id="nome" name="nome" type="text" class="validate">
+          <label for="nome">Digite seu nome</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <input id="idade" name="idade" type="number" class="validate">
+          <label for="idade">Digite sua idade</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <input id="telefone" name="telefone" type="tel" class="validate">
+          <label for="telefone">Digite seu telefone</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <input id="email" name="email" type="email" class="validate">
+          <label for="email">Digite seu email</label>
+        </div>
+      </div>
+
+      <div class="col s2">
+        <button id="enviar" class="btn waves-effect waves-light" type="button" name="action">
+          Enviar
+          <i class="material-icons right">send</i>
+        </button>
+      </div>
+
+      </div>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/javascripts/script.js"></script>
   </body>
