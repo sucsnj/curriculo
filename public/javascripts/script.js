@@ -1,3 +1,8 @@
+document.addEventListener('DOMContentLoaded', function() {
+  var textNeedResize = document.querySelectorAll('textarea');
+  M.textareaAutoResize(textNeedResize[0]); // aplica autoresize
+});
+
 $(document).ready(function() {
   
     // quando botão enviar for clicado
@@ -22,16 +27,28 @@ async function criarFormulario() {
     let idade = $("#idade").val();
     let telefone = $("#telefone").val();
     let email = $("#email").val();
+    let logradouro = $("#logradouro").val();
+    let cep = $("#cep").val();
+    let estado = $("#estado").val();
+    let cidade = $("#cidade").val();
+    let nacionalidade = $("#nacionalidade").val();
+    let resumo = $("#resumo").val();
+    let linkedin = $("#linkedin").val();
+    let github = $("#github").val();
+    let formacao = $("#formacao").val();
+    let projeto = $("#projeto").val();
+    let tecnologias = $("#tecnologias").val();
+    let complementar = $("#complementar").val();
 
     // se algum input não tiver valor
-    if (!nome || !idade || !telefone || !email) {
+    if (!nome || !idade || !telefone || !email || !logradouro) {
         // mostra mensagem de erro
         M.toast({html: "Preencha todos os campos", displayLength: 4000});
         return;
     }
 
     // se todos os inputs tiverem valor
-    if (nome && idade && telefone && email) {
+    if (nome && idade && telefone && email && logradouro) {
         // faz fetch para enviar dados
         const response = await fetch("/submit", {
         method: "POST",
@@ -42,7 +59,19 @@ async function criarFormulario() {
                 nome: nome,
                 idade: idade,
                 telefone: telefone,
-                email: email
+                email: email,
+                logradouro: logradouro,
+                cep: cep,
+                estado: estado,
+                cidade: cidade,
+                nacionalidade: nacionalidade,
+                resumo: resumo,
+                linkedin: linkedin,
+                github: github,
+                formacao: formacao,
+                projeto: projeto,
+                tecnologias: tecnologias,
+                complementar: complementar
             })
         });
 
