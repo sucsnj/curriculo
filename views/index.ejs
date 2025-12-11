@@ -10,10 +10,30 @@
     <h1><%= title %></h1>
     <p>Bem vindo ao app de criação de <%= title %>s</p>
 
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">Nome completo</span>
+        <p>Idade: 20 anos</p>
+        <p>Telefone: (99) 98888-7777</p>
+        <p>Email: email@outlook.com</p>
+        <p>Logradouro: Logradouro, número</p>
+        <p>Cidade: Cidade - UF</p>
+        <br/>
+        <p>LinkedIn: link</p>
+        <p>GitHub: link</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <p>Texto</p>
+      </div>
+    </div>
+
     <form action="/submit" method="POST" class="container">
       <div class="row">
         <div class="input-field col s5">
-          <input id="nome" name="nome" type="text" class="validate">
+          <textarea id="nome" name="nome" class="materialize-textarea"></textarea>
           <label for="nome">Digite seu nome</label>
         </div>
       </div>
@@ -39,6 +59,92 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="logradouro" name="logradouro" class="materialize-textarea"></textarea>
+          <label for="logradouro">Digite seu logradouro</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="cep" name="cep" class="materialize-textarea"></textarea>
+          <label for="cep">Digite seu CEP</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="estado" name="estado" class="materialize-textarea"></textarea>
+          <label for="estado">Digite seu estado civil</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="cidade" name="cidade" class="materialize-textarea"></textarea>
+          <label for="cidade">Digite sua cidade</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="nacionalidade" name="nacionalidade" class="materialize-textarea"></textarea>
+          <label for="nacionalidade">Digite sua nacionalidade</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="linkedin" name="linkedin" class="materialize-textarea"></textarea>
+          <label for="linkedin">Link do seu LinkedIn</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="github" name="github" class="materialize-textarea"></textarea>
+          <label for="github">Link do seu Github</label>
+        </div>
+      </div>
+
+      <!-- profissional -->
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="resumo" name="resumo" class="materialize-textarea"></textarea>
+          <label for="resumo">Resumo profissional</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="formacao" name="formacao" class="materialize-textarea"></textarea>
+          <label for="formacao">Formação</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="projeto" name="projeto" class="materialize-textarea"></textarea>
+          <label for="projeto">Projeto e Portifólio</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="tecnologias" name="tecnologias" class="materialize-textarea"></textarea>
+          <label for="tecnologias">Tecnologias usadas</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s5">
+          <textarea id="complementar" name="complementar" class="materialize-textarea"></textarea>
+          <label for="complementar">Experiência complementar</label>
+        </div>
+      </div>
+
+      <!-- botão enviar -->
       <div class="col s2">
         <button id="enviar" class="btn waves-effect waves-light" type="button" name="action">
           Enviar
@@ -46,12 +152,14 @@
         </button>
       </div>
 
-      </div>
     </form>
 
+    <br/>
+
+    <!-- carregar dados -->
     <div class="col s2">
       <button id="leitura" class="btn waves-effect waves-light" type="button" name="action">
-        Enviar
+        Carregar
         <i class="material-icons right">send</i>
       </button>
     </div>
