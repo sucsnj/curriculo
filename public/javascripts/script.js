@@ -53,6 +53,8 @@ $(document).ready(function () {
         const id = $("#identificador").val().trim();
         await atualizarFormulario(id);
     });
+
+    aplicarMascaras();
 });
 
 // função para pegar o formulário
@@ -200,4 +202,10 @@ async function preencherFormulario() {
         formulario[id] = valor;
     });
     return formulario;
+}
+
+function aplicarMascaras() {
+  $("#telefone").mask("(00) 00000-0000");
+  $("#cep").mask("00000-000");
+  $("#idade").mask("00");
 }

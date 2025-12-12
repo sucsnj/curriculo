@@ -1,11 +1,8 @@
-// document.addEventListener('DOMContentLoaded', function() {
-//   var textNeedResize = document.querySelectorAll('textarea');
-//   M.textareaAutoResize(textNeedResize[0]); // aplica autoresize
-// });
-
 $(document).ready(function() {
 
     curriculo(dadosId);
+
+    aplicarMascaras();
 
 });
 
@@ -37,4 +34,10 @@ async function curriculo(id) {
     $("#projeto").text(registro.projeto);
     $("#tecnologias").text(registro.tecnologias);
     $("#complementar").text(registro.complementar);
+}
+
+function aplicarMascaras() {
+  $("#telefone").mask("(00) 00000-0000");
+  $("#cep").mask("00000-000");
+  $("#idade").mask("00");
 }
