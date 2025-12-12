@@ -4,35 +4,49 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 $(document).ready(function () {
-  $('.modal').modal();
+    $('.modal').modal();
 
-  $("#enviar").click(function (event) {
-    event.preventDefault();
-    $("#modal-id").modal('open');
+    $("#enviar").click(function (event) {
+        event.preventDefault();
+        $("#modal-id").modal('open');
 
-    $("#confirmarId").off('click').on('click', async function () {
-      const id = $("#identificador").val().trim();
-      if (!id) {
-        M.toast({ html: "Insira um identificador", displayLength: 4000 });
-        return;
-      }
-      await criarFormulario(id);
+        $("#confirmarId").off('click').on('click', async function () {
+            const id = $("#identificador").val().trim();
+            if (!id) {
+                M.toast({ html: "Insira um identificador", displayLength: 4000 });
+                return;
+            }
+            await criarFormulario(id);
+        });
     });
-  });
 
-  $(".btn-form").click(function (event) {
-    event.preventDefault();
-    $("#modal-id").modal('open');
+    $(".btn-form").click(function (event) {
+        event.preventDefault();
+        $("#modal-id").modal('open');
 
-    $("#confirmarId").off('click').on('click', async function () {
-      const id = $("#identificador").val().trim();
-      if (!id) {
-        M.toast({ html: "Preencha o identificador", displayLength: 4000 });
-        return;
-      }
-      await pegarFormulario(id);
+        $("#confirmarId").off('click').on('click', async function () {
+            const id = $("#identificador").val().trim();
+            if (!id) {
+                M.toast({ html: "Preencha o identificador", displayLength: 4000 });
+                return;
+            }
+            await pegarFormulario(id);
+        });
     });
-  });
+
+    $("#carregar").click(function (event) {
+        event.preventDefault();
+        $("#modal-id").modal('open');
+
+        $("#confirmarId").off('click').on('click', async function () {
+            const id = $("#identificador").val().trim();
+            if (!id) {
+                M.toast({ html: "Preencha o identificador", displayLength: 4000 });
+                return;
+            }
+            await carregarDados(id);
+        });
+    });
 });
 
 // função para pegar o formulário
@@ -54,34 +68,27 @@ async function criarFormulario(id) {
         return;
     }
 
-    let dados;
-    // pega o valor do input
-    let nome = $("#nome").val();
-    let idade = $("#idade").val();
-    let telefone = $("#telefone").val();
-    let email = $("#email").val();
-    let logradouro = $("#logradouro").val();
-    let cep = $("#cep").val();
-    let estado = $("#estado").val();
-    let cidade = $("#cidade").val();
-    let nacionalidade = $("#nacionalidade").val();
-    let resumo = $("#resumo").val();
-    let linkedin = $("#linkedin").val();
-    let github = $("#github").val();
-    let formacao = $("#formacao").val();
-    let projeto = $("#projeto").val();
-    let tecnologias = $("#tecnologias").val();
-    let complementar = $("#complementar").val();
+    // preenche o formulário
+    const formulario = {};
+    $("#formulario [id]").each(function () {
+        const id = $(this).attr("id");
+        const valor = $(this).val();
+        formulario[id] = valor;
+    });
 
     // se algum input não tiver valor
-    if (!nome || !idade) {
+    if (!formulario.nome || !formulario.idade) {
         // mostra mensagem de erro
         M.toast({ html: "Preencha todos os campos", displayLength: 4000 });
         return;
     }
 
+    let data = {};
+    formulario.id = id;
+    delete formulario.enviar;
+
     // se todos os inputs tiverem valor
-    if (nome && idade) {
+    if (formulario.nome && formulario.idade) {
         // faz fetch para enviar dados
         const response = await fetch("/submit", {
             method: "POST",
@@ -89,28 +96,11 @@ async function criarFormulario(id) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                id: id,
-                nome: nome,
-                idade: idade,
-                telefone: telefone,
-                email: email,
-                logradouro: logradouro,
-                cep: cep,
-                estado: estado,
-                cidade: cidade,
-                nacionalidade: nacionalidade,
-                resumo: resumo,
-                linkedin: linkedin,
-                github: github,
-                formacao: formacao,
-                projeto: projeto,
-                tecnologias: tecnologias,
-                complementar: complementar
+                ...formulario
             })
         });
 
-        const data = await response.json();
-        dados = data;
+        data = await response.json();
 
         // se o fetch tiver sucesso
         if (response.ok) {
@@ -123,7 +113,7 @@ async function criarFormulario(id) {
             M.toast({ html: data.mensagem, displayLength: 4000 });
         }
     }
-    return dados;
+    return data;
 };
 
 async function pegarFormulario(id) {
@@ -149,3 +139,27 @@ async function pegarFormulario(id) {
         M.toast({ html: "Identificador encontrado", displayLength: 4000 });
     }
 };
+
+async function carregarDados(id) {
+    const response = await fetch("/leitura");
+    const registros = await response.json();
+    const registro = registros.find(item => item.id === id);
+
+    if (!registro) {
+        M.toast({ html: "Identificador não encontrado", displayLength: 4000 });
+        return;
+    }
+
+    let dados = { ...registro };
+
+    $.each(dados, function (id, valor) {
+        const $campo = $("#" + id);
+        if ($campo.length) {
+            $campo.val(valor);
+            if ($campo.is("textarea")) {
+                M.textareaAutoResize($campo[0]);
+            }
+        }
+    });
+    M.updateTextFields();
+}
