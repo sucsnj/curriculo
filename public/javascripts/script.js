@@ -11,7 +11,7 @@ $(document).ready(function() {
         criarFormulario();
     });
 
-    $("#leitura").click(async function(event) {
+    $("#form").click(async function(event) {
         event.preventDefault();
         pegarFormulario();
     });
@@ -47,6 +47,27 @@ async function criarFormulario() {
         return;
     }
 
+    // prompt perguntando o nome da pessoa
+    const id = prompt("Digite um identificador");
+    if (!id) {
+        // mostra mensagem de erro
+        M.toast({html: "Preencha o identificador", displayLength: 4000});
+        return;
+    }
+    if (id.length < 4) {
+        // mostra mensagem de erro
+        M.toast({html: "Identificador deve ter pelo menos 4 caracteres", displayLength: 4000});
+        return;
+    }
+    // se o id já existir
+    const response = await fetch("/leitura");
+    const registros = await response.json();
+    if (registros.find(item => item.id === id)) {
+        // mostra mensagem de erro
+        M.toast({html: "Identificador já existe", displayLength: 4000});
+        return;
+    }
+
     // se todos os inputs tiverem valor
     if (nome && idade && telefone && email && logradouro) {
         // faz fetch para enviar dados
@@ -56,6 +77,7 @@ async function criarFormulario() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+                id: id,
                 nome: nome,
                 idade: idade,
                 telefone: telefone,
@@ -97,8 +119,24 @@ async function pegarFormulario() {
     const registros = await response.json();
     console.log(registros);
 
-    // vai para  rota leitura
-    window.location.href = "/leitura";
+    // verifica o id
+    const id = prompt("Digite o identificador");
+    if (!id) {
+        // mostra mensagem de erro
+        M.toast({html: "Preencha o identificador", displayLength: 4000});
+        return;
+    }
 
-    M.toast({html: "Foram encontrados " + registros.length + " registros", displayLength: 4000});
+    // verifica o id dentro do registro
+    const registro = registros.find(item => item.id === id);
+    if (!registro) {
+        // mostra mensagem de erro
+        M.toast({html: "Identificador não encontrado", displayLength: 4000});
+        return;
+    } else {
+        // vai para  rota leitura
+        window.location.href = "/form?id=" + id;;
+
+        M.toast({html: "Identificador encontrado", displayLength: 4000});
+    }
 };

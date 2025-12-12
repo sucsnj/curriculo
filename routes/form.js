@@ -31,14 +31,19 @@ router.get('/leitura', (req, res) => {
 
 router.get('/form', (req, res) => {
   let registros = [];
+  let idPrompt = req.query.id;
 
   if (fs.existsSync("dados.json")) {
     registros = JSON.parse(fs.readFileSync("dados.json"));
   }
 
-  const ultimoRegistro = registros[registros.length - 1];
+  const registro = registros.find(item => item.id === idPrompt);
+    if (!registro) {
+    // se não achar, pode renderizar uma página de erro ou cair no último registro
+    return res.render('form', { dados: null });
+  }
 
-  res.render('form', { dados: ultimoRegistro }); 
+  res.render('form', { dados: registro }); 
 });
 
 module.exports = router;
