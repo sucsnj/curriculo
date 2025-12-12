@@ -37,13 +37,13 @@ router.get('/form', (req, res) => {
     registros = JSON.parse(fs.readFileSync("dados.json"));
   }
 
-  const registro = registros.find(item => item.id === idPrompt);
+  const registro = registros.find(item => item.id === Number(idPrompt));
     if (!registro) {
     // se não achar, pode renderizar uma página de erro ou cair no último registro
     return res.render('form', { dados: null });
   }
 
-  res.render('form', { dados: registro }); 
+  res.render('form', { dados: registro });
 });
 
 module.exports = router;

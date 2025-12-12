@@ -135,7 +135,7 @@ async function pegarFormulario() {
         return;
     } else {
         // vai para  rota leitura
-        window.location.href = "/form?id=" + id;;
+        window.location.href = "/form?id=" + id;
 
         M.toast({html: "Identificador encontrado", displayLength: 4000});
     }
