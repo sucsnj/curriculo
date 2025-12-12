@@ -38,3 +38,10 @@ section h5 {
     print-color-adjust: exact;
   }
 }
+
+/* esconder elementos que não devem ser impressos */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
