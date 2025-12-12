@@ -5,35 +5,36 @@
 
 $(document).ready(function() {
 
-    $('#telefone').mask('(00) 00000-0000');
-    $('#cep').mask('00000-000');
-    $('#idade').mask('00');
-
-    curriculo();
+    curriculo(dadosId);
 
 });
 
 // função para pegar o formulário
-async function curriculo() {
+async function curriculo(id) {
     // carregar dados.json
     const response = await fetch("/leitura");
     const registros = await response.json();
-    console.log(registros);
+    const registro = registros.find(item => item.id === id);
+    
+    if (!registro) {
+        M.toast({html: "Identificador não encontrado", displayLength: 4000});
+        return;
+    }
 
-    $("#nome").text(registros[registros.length - 1].nome);
-    $("#idade").text(registros[registros.length - 1].idade + " anos");
-    $("#telefone").text(registros[registros.length - 1].telefone);
-    $("#email").text(registros[registros.length - 1].email);
-    $("#logradouro").text(registros[registros.length - 1].logradouro);
-    $("#cep").text(registros[registros.length - 1].cep);
-    $("#estado").text(registros[registros.length - 1].estado);
-    $("#cidade").text(registros[registros.length - 1].cidade);
-    $("#nacionalidade").text(registros[registros.length - 1].nacionalidade);
-    $("#linkedin").text(registros[registros.length - 1].linkedin);
-    $("#github").text(registros[registros.length - 1].github);
-    $("#resumo").text(registros[registros.length - 1].resumo);
-    $("#formacao").text(registros[registros.length - 1].formacao);
-    $("#projeto").text(registros[registros.length - 1].projeto);
-    $("#tecnologias").text(registros[registros.length - 1].tecnologias);
-    $("#complementar").text(registros[registros.length - 1].complementar);
+    $("#nome").text(registro.nome);
+    $("#idade").text(registro.idade + " anos");
+    $("#telefone").text(registro.telefone);
+    $("#email").text(registro.email);
+    $("#logradouro").text(registro.logradouro);
+    $("#cep").text(registro.cep);
+    $("#estado").text(registro.estado);
+    $("#cidade").text(registro.cidade);
+    $("#nacionalidade").text(registro.nacionalidade);
+    $("#linkedin").text(registro.linkedin);
+    $("#github").text(registro.github);
+    $("#resumo").text(registro.resumo);
+    $("#formacao").text(registro.formacao);
+    $("#projeto").text(registro.projeto);
+    $("#tecnologias").text(registro.tecnologias);
+    $("#complementar").text(registro.complementar);
 }
