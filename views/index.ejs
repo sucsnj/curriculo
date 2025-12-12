@@ -10,11 +10,14 @@
     <div class="container">
       <h4 class="center-align"><%= title %></h4>
       <p class="center-align">Bem-vindo ao app de criação de <%= title %>s</p>
-      <div class="center-align">
-        <a class="btn btn-form">Ir para Currículo</a>
-      </div>
-      <div class="center-align">
-        <a id="carregar" class="btn btn-form">Carregar Formulário</a>
+
+      <div class="row center-align">
+        <div class="col s6">
+          <a class="btn btn-form">Ir para Currículo</a>
+        </div>
+        <div class="col s6">
+          <a id="carregar" class="btn">Carregar Formulário</a>
+        </div>
       </div>
 
       <form id="formulario" action="/submit" method="POST">
@@ -118,10 +121,18 @@
           </div>
         </div>
 
-        <!-- Botão enviar -->
+        <!-- Botão salvar -->
         <div class="row center-align">
           <button id="enviar" class="btn waves-effect waves-light" type="submit" name="action">
-            Enviar
+            Salvar
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+
+        <!-- Botão atualizar -->
+        <div class="row center-align">
+          <button id="atualizar" class="btn waves-effect waves-light" type="button" name="action">
+            Atualizar
             <i class="material-icons right">send</i>
           </button>
         </div>

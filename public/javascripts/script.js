@@ -47,6 +47,11 @@ $(document).ready(function () {
             await carregarDados(id);
         });
     });
+
+    $("#atualizar").off('click').on('click', async function (event) {
+        event.preventDefault();
+        await atualizarFormulario();
+    });
 });
 
 // função para pegar o formulário
@@ -162,4 +167,9 @@ async function carregarDados(id) {
         }
     });
     M.updateTextFields();
+}
+
+async function atualizarFormulario() {
+    console.log("Implementar atualizar");
+    M.toast({ html: "Implementar atualizar", displayLength: 4000 });
 }
