@@ -50,7 +50,8 @@ $(document).ready(function () {
 
     $("#atualizar").off('click').on('click', async function (event) {
         event.preventDefault();
-        await atualizarFormulario();
+        const id = $("#identificador").val().trim();
+        await atualizarFormulario(id);
     });
 });
 
@@ -74,12 +75,7 @@ async function criarFormulario(id) {
     }
 
     // preenche o formulário
-    const formulario = {};
-    $("#formulario [id]").each(function () {
-        const id = $(this).attr("id");
-        const valor = $(this).val();
-        formulario[id] = valor;
-    });
+    const formulario = await preencherFormulario();
 
     // se algum input não tiver valor
     if (!formulario.nome || !formulario.idade) {
@@ -169,7 +165,39 @@ async function carregarDados(id) {
     M.updateTextFields();
 }
 
-async function atualizarFormulario() {
-    console.log("Implementar atualizar");
-    M.toast({ html: "Implementar atualizar", displayLength: 4000 });
+async function atualizarFormulario(id) {
+
+    const formulario = await preencherFormulario();
+    formulario.id = id;
+    delete formulario.enviar;
+
+    const response = await fetch("/atualizar", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ...formulario })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        // mostra mensagem de sucesso
+        console.log(data.mensagem);
+        M.toast({ html: data.mensagem, displayLength: 4000 });
+    } else {
+        // mostra mensagem de erro
+        console.log(data.mensagem);
+        M.toast({ html: data.mensagem, displayLength: 4000 });
+    }
+};
+
+async function preencherFormulario() {
+    const formulario = {};
+    $("#formulario [id]").each(function () {
+        const id = $(this).attr("id");
+        const valor = $(this).val();
+        formulario[id] = valor;
+    });
+    return formulario;
 }
