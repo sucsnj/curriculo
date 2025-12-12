@@ -47,4 +47,27 @@ router.get('/form', (req, res) => {
   res.render('form', { dados: registro });
 });
 
+router.patch('/atualizar', (req, res) => {
+  try {
+    const dados = req.body;
+    const id = dados.id;
+    let registros = [];
+    if (fs.existsSync("dados.json")) {
+      registros = JSON.parse(fs.readFileSync("dados.json"));
+    }
+
+    const index = registros.findIndex(r => r.id === id);
+    if (index === -1) {
+      return res.status(404).json({ mensagem: "Registro não encontrado" });
+    }
+    registros[index] = { ...registros[index], ...dados };
+
+    fs.writeFileSync("dados.json", JSON.stringify(registros, null, 2));
+
+    res.json({ mensagem: "Dados atualizados com sucesso" });
+  } catch (err) {
+    res.status(500).json({ mensagem: "Erro ao atualizar dados" });
+  }
+});
+
 module.exports = router;
