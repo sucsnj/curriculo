@@ -11,7 +11,7 @@
       <h4 class="center-align"><%= title %></h4>
       <p class="center-align">Bem-vindo ao app de criação de <%= title %>s</p>
       <div class="center-align">
-        <a id="form" class="btn">Ir para Currículo</a>
+        <a class="btn btn-form">Ir para Currículo</a>
       </div>
 
       <form action="/submit" method="POST">
@@ -125,12 +125,14 @@
       </form>
 
       <div class="center-align">
-        <a id="form" class="btn">Ir para Currículo</a>
+        <a class="btn btn-form">Ir para Currículo</a>
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <%- include('modal') %>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/javascripts/script.js"></script>
   </body>
 </html>
