@@ -10,26 +10,6 @@
     <h1><%= title %></h1>
     <p>Bem vindo ao app de criação de <%= title %>s</p>
 
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">Nome completo</span>
-        <p>Idade: 20 anos</p>
-        <p>Telefone: (99) 98888-7777</p>
-        <p>Email: email@outlook.com</p>
-        <p>Logradouro: Logradouro, número</p>
-        <p>Cidade: Cidade - UF</p>
-        <br/>
-        <p>LinkedIn: link</p>
-        <p>GitHub: link</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-content">
-        <p>Texto</p>
-      </div>
-    </div>
-
     <form action="/submit" method="POST" class="container">
       <div class="row">
         <div class="input-field col s5">
@@ -157,11 +137,8 @@
     <br/>
 
     <!-- carregar dados -->
-    <div class="col s2">
-      <button id="leitura" class="btn waves-effect waves-light" type="button" name="action">
-        Carregar
-        <i class="material-icons right">send</i>
-      </button>
+    <div class="container">
+      <a href="/form" class="btn">Ir para Formulário</a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

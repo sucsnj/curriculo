@@ -97,5 +97,8 @@ async function pegarFormulario() {
     const registros = await response.json();
     console.log(registros);
 
+    // vai para  rota leitura
+    window.location.href = "/leitura";
+
     M.toast({html: "Foram encontrados " + registros.length + " registros", displayLength: 4000});
 };
