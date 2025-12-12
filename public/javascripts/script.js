@@ -1,25 +1,58 @@
-document.addEventListener('DOMContentLoaded', function() {
-  var textNeedResize = document.querySelectorAll('textarea');
-  M.textareaAutoResize(textNeedResize[0]); // aplica autoresize
+document.addEventListener('DOMContentLoaded', function () {
+    var textNeedResize = document.querySelectorAll('textarea');
+    M.textareaAutoResize(textNeedResize[0]); // aplica autoresize
 });
 
-$(document).ready(function() {
-  
-    // quando botão enviar for clicado
-    $("#enviar").click(async function(event) {
-        event.preventDefault();
-        criarFormulario();
-    });
+$(document).ready(function () {
+  $('.modal').modal();
 
-    $("#form").click(async function(event) {
-        event.preventDefault();
-        pegarFormulario();
-    });
+  $("#enviar").click(function (event) {
+    event.preventDefault();
+    $("#modal-id").modal('open');
 
+    $("#confirmarId").off('click').on('click', async function () {
+      const id = $("#identificador").val().trim();
+      if (!id) {
+        M.toast({ html: "Insira um identificador", displayLength: 4000 });
+        return;
+      }
+      await criarFormulario(id);
+    });
+  });
+
+  $(".btn-form").click(function (event) {
+    event.preventDefault();
+    $("#modal-id").modal('open');
+
+    $("#confirmarId").off('click').on('click', async function () {
+      const id = $("#identificador").val().trim();
+      if (!id) {
+        M.toast({ html: "Preencha o identificador", displayLength: 4000 });
+        return;
+      }
+      await pegarFormulario(id);
+    });
+  });
 });
 
 // função para pegar o formulário
-async function criarFormulario() {
+async function criarFormulario(id) {
+
+    if (id.length < 4) {
+        // mostra mensagem de erro
+        M.toast({ html: "Identificador deve ter pelo menos 4 caracteres", displayLength: 4000 });
+        return;
+    }
+
+    // se o id já existir
+    const response = await fetch("/leitura");
+    const registros = await response.json();
+
+    if (registros.find(item => item.id === id)) {
+        // mostra mensagem de erro
+        M.toast({ html: "Identificador já existe", displayLength: 4000 });
+        return;
+    }
 
     let dados;
     // pega o valor do input
@@ -43,29 +76,7 @@ async function criarFormulario() {
     // se algum input não tiver valor
     if (!nome || !idade) {
         // mostra mensagem de erro
-        M.toast({html: "Preencha todos os campos", displayLength: 4000});
-        return;
-    }
-
-    // prompt perguntando o nome da pessoa
-    const id = prompt("Digite um identificador");
-    if (!id) {
-        // mostra mensagem de erro
-        M.toast({html: "Preencha o identificador", displayLength: 4000});
-        return;
-    }
-    if (id.length < 4) {
-        // mostra mensagem de erro
-        M.toast({html: "Identificador deve ter pelo menos 4 caracteres", displayLength: 4000});
-        return;
-    }
-    // se o id já existir
-    const response = await fetch("/leitura");
-    const registros = await response.json();
-
-    if (registros.find(item => item.id === id)) {
-        // mostra mensagem de erro
-        M.toast({html: "Identificador já existe", displayLength: 4000});
+        M.toast({ html: "Preencha todos os campos", displayLength: 4000 });
         return;
     }
 
@@ -73,11 +84,11 @@ async function criarFormulario() {
     if (nome && idade) {
         // faz fetch para enviar dados
         const response = await fetch("/submit", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
                 id: id,
                 nome: nome,
                 idade: idade,
@@ -105,30 +116,22 @@ async function criarFormulario() {
         if (response.ok) {
             // mostra mensagem de sucesso
             console.log(data.mensagem);
-            M.toast({html: data.mensagem, displayLength: 4000});
+            M.toast({ html: data.mensagem, displayLength: 4000 });
         } else {
             // mostra mensagem de erro
             console.log(data.mensagem);
-            M.toast({html: data.mensagem, displayLength: 4000});
+            M.toast({ html: data.mensagem, displayLength: 4000 });
         }
     }
     return dados;
 };
 
-async function pegarFormulario() {
+async function pegarFormulario(id) {
     const response = await fetch("/leitura");
     const registros = await response.json();
 
     if (!registros.length) {
-        M.toast({html: "Não há registros", displayLength: 4000});
-        return;
-    }
-
-    // verifica o id
-    let id = prompt("Digite o identificador");
-    if (!id) {
-        // mostra mensagem de erro
-        M.toast({html: "Preencha o identificador", displayLength: 4000});
+        M.toast({ html: "Não há registros", displayLength: 4000 });
         return;
     }
 
@@ -136,13 +139,13 @@ async function pegarFormulario() {
     const registro = registros.find(item => item.id === id);
     if (!registro) {
         // mostra mensagem de erro
-        M.toast({html: "Identificador não encontrado", displayLength: 4000});
+        M.toast({ html: "Identificador não encontrado", displayLength: 4000 });
         return;
     } else {
         // vai para  rota leitura
         window.location.href = "/form?id=" + id;
         console.log(id);
 
-        M.toast({html: "Identificador encontrado", displayLength: 4000});
+        M.toast({ html: "Identificador encontrado", displayLength: 4000 });
     }
 };
