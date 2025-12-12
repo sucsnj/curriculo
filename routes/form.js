@@ -20,12 +20,13 @@ router.post('/submit', (req, res) => {
 });
 
 router.get('/leitura', (req, res) => {
-  if (fs.existsSync("dados.json")) {
-    const registros = JSON.parse(fs.readFileSync("dados.json"));
-    res.json(registros); // retorna todos os registros
-
-  } else {
-    res.json({ mensagem: "Nenhum dado encontrado" });
+  try {
+    const dados = fs.readFileSync('dados.json', 'utf8');
+    const registros = JSON.parse(dados);
+    res.json(Array.isArray(registros) ? registros : []);
+  } catch (err) {
+    // se arquivo não existe, retorna array vazio
+    res.json([]);
   }
 });
 
@@ -37,9 +38,9 @@ router.get('/form', (req, res) => {
     registros = JSON.parse(fs.readFileSync("dados.json"));
   }
 
-  const registro = registros.find(item => item.id === Number(idPrompt));
-    if (!registro) {
-    // se não achar, pode renderizar uma página de erro ou cair no último registro
+  const registro = registros.find(item => item.id === idPrompt);
+  if (!registro) {
+    // se não achar, pode renderizar uma página de erro ou cai no último registro
     return res.render('form', { dados: null });
   }
 

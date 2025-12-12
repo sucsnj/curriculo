@@ -41,7 +41,7 @@ async function criarFormulario() {
     let complementar = $("#complementar").val();
 
     // se algum input não tiver valor
-    if (!nome || !idade || !telefone || !email || !logradouro) {
+    if (!nome || !idade) {
         // mostra mensagem de erro
         M.toast({html: "Preencha todos os campos", displayLength: 4000});
         return;
@@ -62,6 +62,7 @@ async function criarFormulario() {
     // se o id já existir
     const response = await fetch("/leitura");
     const registros = await response.json();
+
     if (registros.find(item => item.id === id)) {
         // mostra mensagem de erro
         M.toast({html: "Identificador já existe", displayLength: 4000});
@@ -69,7 +70,7 @@ async function criarFormulario() {
     }
 
     // se todos os inputs tiverem valor
-    if (nome && idade && telefone && email && logradouro) {
+    if (nome && idade) {
         // faz fetch para enviar dados
         const response = await fetch("/submit", {
         method: "POST",
@@ -117,10 +118,14 @@ async function criarFormulario() {
 async function pegarFormulario() {
     const response = await fetch("/leitura");
     const registros = await response.json();
-    console.log(registros);
+
+    if (!registros.length) {
+        M.toast({html: "Não há registros", displayLength: 4000});
+        return;
+    }
 
     // verifica o id
-    const id = prompt("Digite o identificador");
+    let id = prompt("Digite o identificador");
     if (!id) {
         // mostra mensagem de erro
         M.toast({html: "Preencha o identificador", displayLength: 4000});
@@ -136,6 +141,7 @@ async function pegarFormulario() {
     } else {
         // vai para  rota leitura
         window.location.href = "/form?id=" + id;
+        console.log(id);
 
         M.toast({html: "Identificador encontrado", displayLength: 4000});
     }
