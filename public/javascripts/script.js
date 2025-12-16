@@ -3,8 +3,16 @@ document.addEventListener('DOMContentLoaded', function () {
     M.textareaAutoResize(textNeedResize[0]); // aplica autoresize
 });
 
+let camposFormacao = [];
+let cont = 1;
+
 $(document).ready(function () {
     $('.modal').modal();
+
+    // delegação para remover formação
+    $("#formacao-container").on("click", "button[id^='remover-formacao']", function() {
+        $(this).closest(".formacao-div").remove();
+    });
 
     $("#enviar").click(function (event) {
         event.preventDefault();
@@ -52,6 +60,13 @@ $(document).ready(function () {
         event.preventDefault();
         const id = $("#identificador").val().trim();
         await atualizarFormulario(id);
+    });
+
+    $("#btn-formacao").off('click').on('click', async function (event) {
+        event.preventDefault();
+        // $("#modal-dinamico").modal('open');
+
+        await adicionarFormacao();
     });
 
     aplicarMascaras();
@@ -196,16 +211,43 @@ async function atualizarFormulario(id) {
 
 async function preencherFormulario() {
     const formulario = {};
+    const formacoes = [];
+
     $("#formulario [id]").each(function () {
         const id = $(this).attr("id");
         const valor = $(this).val();
-        formulario[id] = valor;
+
+        if (id.startsWith("formacao")) {
+            formacoes.push(valor);
+        } else {
+            formulario[id] = valor;
+        }
     });
+    
+    formulario.formacoes = formacoes;
     return formulario;
 }
 
 function aplicarMascaras() {
-  $("#telefone").mask("(00) 00000-0000");
-  $("#cep").mask("00000-000");
-  $("#idade").mask("00");
+    $("#telefone").mask("(00) 00000-0000");
+    $("#cep").mask("00000-000");
+    $("#idade").mask("00");
+}
+
+async function adicionarFormacao() {
+    const novoCampo = `
+        <div class="row formacao-div">
+            <div class="input-field col s12">
+                <textarea id="formacao${cont}" name="formacao${cont}" class="materialize-textarea"></textarea>
+                <label for="formacao${cont}">Formação ${cont}</label>
+            </div>
+
+            <button id="remover-formacao${cont}" class="btn waves-effect waves-light red">
+                Remover
+            </button>
+        </div>
+    `;
+
+    $("#formacao-container").append(novoCampo);
+    cont++;
 }
