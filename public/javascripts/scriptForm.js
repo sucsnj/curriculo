@@ -24,11 +24,10 @@ async function curriculo(id) {
     $("#email").text(registro.email);
     $("#logradouro").text(registro.logradouro);
     $("#cep").text(registro.cep);
-    $("#estado").text(registro.estado);
-    $("#cidade").text(registro.cidade);
+    $("#cidade").text(`${registro.cidade} - ${registro.estado}`);
     $("#nacionalidade").text(registro.nacionalidade);
-    $("#linkedin").text(registro.linkedin);
-    $("#github").text(registro.github);
+    $("#urllinkedin").html(`<a href="${registro.urllinkedin}" target="_blank">LinkedIn</a>`);
+    $("#github").html(`<a href="${registro.github}" target="_blank">GitHub</a>`);
     $("#resumo").text(registro.resumo);
 
     // formações

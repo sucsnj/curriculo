@@ -45,3 +45,14 @@ section h5 {
     display: none !important;
   }
 }
+
+/* muda a cor do texto do link */
+#urllinkedin a,
+#github a {
+  color: white; /* cor do texto */
+}
+
+#urllinkedin a:hover,
+#github a:hover {
+  color: #90caf9; /* azul claro ao passar o mouse */
+}
