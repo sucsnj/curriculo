@@ -37,8 +37,22 @@ async function curriculo(id) {
         $("#formacao").append(`<p>${f}</p>`);
     });
 
-    $("#formacao").text(registro.formacao);
-    $("#projeto").text(registro.projeto);
+    // projetos
+    $("#projeto").empty();
+    registro.projetos.forEach(p => {
+        $("#projeto").append(`<p>${p}</p>`);
+    });
+
+    // links dos projetos
+    $("#links").empty();
+    registro.links.forEach(l => {
+        // $("#links").append(`<li class="collection-item"><a href="${l}" target="_blank">${l}</a></li>`);
+        $("#links").append(`<p><a href="${l}" target="_blank">${l}</a></p>`);
+    });
+
+    // tecnologias dos projetos
+    //TODO
+
     $("#tecnologias").text(registro.tecnologias);
     $("#complementar").text(registro.complementar);
 }
