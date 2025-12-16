@@ -64,7 +64,7 @@
       <div id="projeto"></div>
       <div id="links"></div>
     </section>
-    
+
 
     <!-- Tecnologias -->
     <section>
@@ -81,14 +81,19 @@
 
   <div class="container">
     <a href="/" class="btn no-print">Voltar para formulário</a>
+    <button id="pdf" class="btn no-print">
+      Gerar PDF
+    </button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
   <script>
+    // passa o id do registro para o javascript
     var dadosId = "<%= dados.id %>";
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="/javascripts/scriptForm.js"></script>
 </body>
 
