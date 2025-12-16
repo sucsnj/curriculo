@@ -118,6 +118,12 @@ async function criarFormulario(id) {
             delete formulario[key];
         }
     });
+    // deletar campos que estejam vazios
+    Object.keys(formulario).forEach(key => {
+        if (formulario[key] === "") {
+            delete formulario[key];
+        }
+    });
 
     // se todos os inputs tiverem valor
     if (formulario.nome && formulario.idade) {
@@ -184,6 +190,7 @@ async function carregarDados(id) {
 
     let dados = { ...registro };
 
+    // preenche campos fixos
     $.each(dados, function (id, valor) {
         const $campo = $("#" + id);
         if ($campo.length) {
@@ -193,6 +200,62 @@ async function carregarDados(id) {
             }
         }
     });
+
+    // agora trata os arrays dinâmicos (criados pelo javascript)
+    // Formação
+    $("#formacao-container").empty();
+    if (Array.isArray(registro.formacoes)) {
+        registro.formacoes.forEach((f, i) => {
+            if (f && f.trim() !== "") {   // verifica se está vazio
+                const campo = `
+        <div class="row formacao-div">
+          <div class="input-field col s12">
+            <textarea id="formacao${i}" name="formacao${i}" class="materialize-textarea">${f}</textarea>
+            <label for="formacao${i}" class="active">Formação ${i}</label>
+          </div>
+        </div>
+      `;
+                $("#formacao-container").append(campo);
+            }
+        });
+    }
+
+    // Projetos
+    $("#projeto-container").empty();
+    if (Array.isArray(registro.projetos)) {
+        registro.projetos.forEach((p, i) => {
+            if (p && p.trim() !== "") {
+                const campo = `
+        <div class="row projeto-div">
+          <div class="input-field col s12">
+            <textarea id="projeto${i}" name="projeto${i}" class="materialize-textarea">${p}</textarea>
+            <label for="projeto${i}" class="active">Projeto ${i}</label>
+          </div>
+        </div>
+      `;
+                $("#projeto-container").append(campo);
+            }
+        });
+    }
+
+    // Links
+    $("#links-container").empty();
+    if (Array.isArray(registro.links)) {
+        registro.links.forEach((l, i) => {
+            if (l && l.trim() !== "") {
+                const campo = `
+        <div class="row link-div">
+          <div class="input-field col s12">
+            <input id="link${i}" name="link${i}" type="url" value="${l}">
+            <label for="link${i}" class="active">Link ${i}</label>
+          </div>
+        </div>
+      `;
+                $("#links-container").append(campo);
+            }
+        });
+    }
+
     M.updateTextFields();
 }
 
@@ -201,6 +264,12 @@ async function atualizarFormulario(id) {
     const formulario = await preencherFormulario();
     formulario.id = id;
     delete formulario.enviar;
+    // deletar botões
+    Object.keys(formulario).forEach(key => {
+        if (key.startsWith("btn")) {
+            delete formulario[key];
+        }
+    });
 
     const response = await fetch("/atualizar", {
         method: "PATCH",
