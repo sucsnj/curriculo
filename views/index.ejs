@@ -105,15 +105,17 @@
         <!-- novas formações pelo javascript -->
       </div>
       <button id="btn-formacao" class="modal-close btn waves-effect waves-light">
-        Adicionar
+        Adicionar Formação
       </button>
 
-      <div class="row">
-        <div class="input-field col s12">
-          <textarea id="projeto" name="projeto" class="materialize-textarea"></textarea>
-          <label for="projeto">Projetos e Portfólio</label>
-        </div>
+      <!-- Projetos -->
+      <h5>Projetos e Portfólio</h5>
+      <div id="projeto-container">
+        <!-- novos projetos pelo javascript -->
       </div>
+      <button id="btn-projeto" class="modal-close btn waves-effect waves-light">
+        Adicionar Projeto
+      </button>
 
       <div class="row">
         <div class="input-field col s12">
@@ -153,7 +155,6 @@
   </div>
 
   <%- include('modal') %>
-    <%- include('modalDinamico') %>
 
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

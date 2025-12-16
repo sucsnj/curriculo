@@ -4,14 +4,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 let camposFormacao = [];
-let cont = 1;
+let contFormacao = 1;
+let contProjeto = 1;
 
 $(document).ready(function () {
     $('.modal').modal();
 
     // delegação para remover formação
-    $("#formacao-container").on("click", "button[id^='remover-formacao']", function() {
+    $("#formacao-container").on("click", "button[id^='btn-remover-formacao']", function () {
         $(this).closest(".formacao-div").remove();
+    });
+    $("#projeto-container").on("click", "button[id^='btn-remover-projeto']", function () {
+        $(this).closest(".projeto-div").remove();
     });
 
     $("#enviar").click(function (event) {
@@ -64,9 +68,12 @@ $(document).ready(function () {
 
     $("#btn-formacao").off('click').on('click', async function (event) {
         event.preventDefault();
-        // $("#modal-dinamico").modal('open');
-
         await adicionarFormacao();
+    });
+
+    $("#btn-projeto").off('click').on('click', async function (event) {
+        event.preventDefault();
+        await adicionarProjeto();
     });
 
     aplicarMascaras();
@@ -97,6 +104,7 @@ async function criarFormulario(id) {
     // se algum input não tiver valor
     if (!formulario.nome || !formulario.idade) {
         // mostra mensagem de erro
+        console.log(formulario);
         M.toast({ html: "Preencha todos os campos", displayLength: 4000 });
         return;
     }
@@ -104,6 +112,12 @@ async function criarFormulario(id) {
     let data = {};
     formulario.id = id;
     delete formulario.enviar;
+    // deletar botões
+    Object.keys(formulario).forEach(key => {
+        if (key.startsWith("btn")) {
+            delete formulario[key];
+        }
+    });
 
     // se todos os inputs tiverem valor
     if (formulario.nome && formulario.idade) {
@@ -212,6 +226,8 @@ async function atualizarFormulario(id) {
 async function preencherFormulario() {
     const formulario = {};
     const formacoes = [];
+    const projetos = [];
+    const links = [];
 
     $("#formulario [id]").each(function () {
         const id = $(this).attr("id");
@@ -219,12 +235,18 @@ async function preencherFormulario() {
 
         if (id.startsWith("formacao")) {
             formacoes.push(valor);
+        } else if (id.startsWith("projeto")) {
+            projetos.push(valor);
+        } else if (id.startsWith("link")) {
+            links.push(valor);
         } else {
             formulario[id] = valor;
         }
     });
-    
+
     formulario.formacoes = formacoes;
+    formulario.projetos = projetos;
+    formulario.links = links;
     return formulario;
 }
 
@@ -237,17 +259,40 @@ function aplicarMascaras() {
 async function adicionarFormacao() {
     const novoCampo = `
         <div class="row formacao-div">
-            <div class="input-field col s12">
-                <textarea id="formacao${cont}" name="formacao${cont}" class="materialize-textarea"></textarea>
-                <label for="formacao${cont}">Formação ${cont}</label>
+            <div class="input-field col s6">
+                <textarea id="formacao${contFormacao}" name="formacao${contFormacao}" class="materialize-textarea"></textarea>
+                <label for="formacao${contFormacao}">Formação ${contFormacao}</label>
             </div>
 
-            <button id="remover-formacao${cont}" class="btn waves-effect waves-light red">
+            <button id="btn-remover-formacao${contFormacao}" class="btn waves-effect waves-light red">
                 Remover
             </button>
         </div>
     `;
 
     $("#formacao-container").append(novoCampo);
-    cont++;
+    contFormacao++;
+}
+
+async function adicionarProjeto() {
+    const novoCampo = `
+        <div class="row projeto-div">
+            <div class="input-field col s12">
+                <textarea id="projeto${contProjeto}" name="projeto${contProjeto}" class="materialize-textarea"></textarea>
+                <label for="projeto${contProjeto}">Projeto ${contProjeto}</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input id="link-projeto${contProjeto}" name="link-projeto${contProjeto}" type="url" class="validate">
+                <label for="link-projeto${contProjeto}">Link do Projeto ${contProjeto}</label>
+            </div>
+
+            <button id="btn-remover-projeto${contProjeto}" class="btn waves-effect waves-light red">
+                Remover
+            </button>
+        </div>
+    `;
+
+    $("#projeto-container").append(novoCampo);
+    contProjeto++;
 }
