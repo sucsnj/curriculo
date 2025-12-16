@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     curriculo(dadosId);
 
@@ -12,9 +12,9 @@ async function curriculo(id) {
     const response = await fetch("/leitura");
     const registros = await response.json();
     const registro = registros.find(item => item.id === id);
-    
+
     if (!registro) {
-        M.toast({html: "Identificador não encontrado", displayLength: 4000});
+        M.toast({ html: "Identificador não encontrado", displayLength: 4000 });
         return;
     }
 
@@ -30,6 +30,13 @@ async function curriculo(id) {
     $("#linkedin").text(registro.linkedin);
     $("#github").text(registro.github);
     $("#resumo").text(registro.resumo);
+
+    // formações
+    $("#formacao").empty(); // limpa o conteúdo anterior
+    registro.formacoes.forEach(f => { // preenche o conteúdo
+        $("#formacao").append(`<p>${f}</p>`);
+    });
+
     $("#formacao").text(registro.formacao);
     $("#projeto").text(registro.projeto);
     $("#tecnologias").text(registro.tecnologias);
@@ -37,7 +44,7 @@ async function curriculo(id) {
 }
 
 function aplicarMascaras() {
-  $("#telefone").mask("(00) 00000-0000");
-  $("#cep").mask("00000-000");
-  $("#idade").mask("00");
+    $("#telefone").mask("(00) 00000-0000");
+    $("#cep").mask("00000-000");
+    $("#idade").mask("00");
 }
