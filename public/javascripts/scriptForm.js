@@ -1,8 +1,29 @@
 $(document).ready(function () {
 
     curriculo(dadosId);
-
     aplicarMascaras();
+
+    $("#pdf").click(function () {
+        const element = document.querySelector(".curriculo");
+
+        // configurações do PDF 
+        const opt = {
+            margin: 0.5,
+            filename: 'curriculo.pdf',
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: { scale: 2 },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        };
+        // gera e baixa o PDF 
+        html2pdf().set(opt).from(element).save();
+    });
 
 });
 
