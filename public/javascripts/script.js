@@ -211,6 +211,11 @@ async function carregarDados(id) {
     const registros = await response.json();
     const registro = registros.find(item => item.id === id);
 
+    // atualiza contadores
+    contFormacao = registro.formacoes ? Object.keys(registro.formacoes).length + 1: 0;
+    contProjeto = registro.projetos ? Object.keys(registro.projetos).length / 2: 0;
+    contProjeto = contProjeto + 1;
+
     if (!registro) {
         M.toast({ html: "Identificador não encontrado", displayLength: 4000 });
         return;
