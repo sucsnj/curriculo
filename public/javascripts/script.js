@@ -84,6 +84,11 @@ $(document).ready(async function () {
         await adicionarProjeto();
     });
 
+    $(".btn-limpar").click(async function (event) {
+        event.preventDefault();
+        await limparFormulario();
+    });
+
     aplicarMascaras();
 });
 
@@ -110,6 +115,21 @@ async function carregarDropdown() {
         // se estiver usando Materialize, precisa atualizar o label/validação
         M.updateTextFields();
     });
+}
+
+async function limparFormulario() {
+    $.each($("#formulario [id]"), function () {
+        $(this).val("");
+    });
+
+    $("#formacao-container").empty();
+    $("#projeto-container").empty();
+
+    // remove classes de validação do Materialize
+    $("#formulario input, #formulario textarea").each(function () {
+        $(this).removeClass("valid invalid");
+    });
+    M.updateTextFields();
 }
 
 // função para pegar o formulário
