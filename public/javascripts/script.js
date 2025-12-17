@@ -13,6 +13,7 @@ $(document).ready(function () {
     $("#formacao-container").on("click", "button[id^='btn-remover-formacao']", async function () {
         $(this).closest(".formacao-div").remove();
     });
+    // delegação para remover projeto e link
     $("#projeto-container").on("click", "button[id^='btn-remover-projeto']", async function () {
         $(this).closest(".projeto-div").remove();
     });

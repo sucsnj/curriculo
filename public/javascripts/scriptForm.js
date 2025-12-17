@@ -45,21 +45,44 @@ async function curriculo(id) {
 
     // formações
     $("#formacao").empty(); // limpa o conteúdo anterior
-    registro.formacoes.forEach(f => { // preenche o conteúdo
-        $("#formacao").append(`<p>${f}</p>`);
-    });
+    if (registro.formacoes && typeof registro.formacoes === "object") {
+        Object.entries(registro.formacoes).forEach(([key, valor]) => {
+            if (valor && valor.trim() !== "") {   // verifica se está vazio
+                const campo = `<p id="${key}">${valor}</p>`;
+                $("#formacao").append(campo);
+            }
+        });
+    }
 
-    // projetos
+    // projetos e links
     $("#projeto").empty();
-    registro.projetos.forEach(p => {
-        $("#projeto").append(`<p>${p}</p>`);
-    });
+    if (registro.projetos && typeof registro.projetos === "object") {
+        const projetoLink = {};
 
-    // links dos projetos
-    $("#links").empty();
-    registro.links.forEach(l => {
-        $("#links").append(`<p><a href="${l}" target="_blank">${l}</a></p>`);
-    });
+        Object.entries(registro.projetos).forEach(([key, valor]) => {
+            const match = key.match(/^projeto(\d+)$/);
+            const matchLink = key.match(/^link-projeto(\d+)$/);
+
+            if (match) {
+                const idx = match[1];
+                projetoLink[idx] = projetoLink[idx] || {};
+                projetoLink[idx].projeto = valor;
+            }
+            if (matchLink) {
+                const idx = matchLink[1];
+                projetoLink[idx] = projetoLink[idx] || {};
+                projetoLink[idx].link = valor;
+            }
+        });
+
+        Object.entries(projetoLink).forEach(([idx, proj]) => {
+            const campo = `
+                <p id="projeto${idx}">${proj.projeto || ""}</p>
+                <a href="${proj.link || ""}" target="_blank">${proj.link || ""}</a>
+            `;
+            $("#projeto").append(campo);
+        });
+    }
 
     $("#tecnologias").text(registro.tecnologias);
     $("#complementar").text(registro.complementar);
