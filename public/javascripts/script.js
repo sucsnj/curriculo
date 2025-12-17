@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 let contFormacao = 1;
 let contProjeto = 1;
 
-$(document).ready(function () {
+$(document).ready(async function () {
     $('.modal').modal();
 
     // delegação para remover formação
@@ -18,9 +18,12 @@ $(document).ready(function () {
         $(this).closest(".projeto-div").remove();
     });
 
-    $("#enviar").click(function (event) {
+    $("#enviar").click(async function (event) {
         event.preventDefault();
         $("#modal-id").modal('open');
+
+        // esconde o dropdown
+        $("#select").hide();
 
         $("#confirmarId").off('click').on('click', async function () {
             const id = $("#identificador").val().trim();
@@ -32,9 +35,12 @@ $(document).ready(function () {
         });
     });
 
-    $(".btn-form").click(function (event) {
+    $(".btn-form").click(async function (event) {
         event.preventDefault();
         $("#modal-id").modal('open');
+
+        // dropdown para escolher o registro
+        await carregarDropdown();
 
         $("#confirmarId").off('click').on('click', async function () {
             const id = $("#identificador").val().trim();
@@ -46,9 +52,11 @@ $(document).ready(function () {
         });
     });
 
-    $("#carregar").click(function (event) {
+    $("#carregar").click(async function (event) {
         event.preventDefault();
         $("#modal-id").modal('open');
+
+        await carregarDropdown();
 
         $("#confirmarId").off('click').on('click', async function () {
             const id = $("#identificador").val().trim();
@@ -79,6 +87,31 @@ $(document).ready(function () {
     aplicarMascaras();
 });
 
+async function carregarJson() {
+    const response = await fetch("/leitura");
+    const registros = await response.json();
+    return registros;
+}
+
+async function carregarDropdown() {
+    $("#select").show();
+    const registros = await carregarJson();
+
+    $("#select").empty();
+    $("#select").append(`<option value="" disabled selected>Selecione um id</option>`);
+    registros.forEach(r => {
+        $("#select").append(`<option value="${r.id}">${r.id}</option>`);
+    });
+
+    // quando selecionar uma opção, preenche o campo de texto
+    $("#select").off("change").on("change", function () {
+        const selectedId = $(this).val();
+        $("#identificador").val(selectedId);
+        // se estiver usando Materialize, precisa atualizar o label/validação
+        M.updateTextFields();
+    });
+}
+
 // função para pegar o formulário
 async function criarFormulario(id) {
 
@@ -89,8 +122,7 @@ async function criarFormulario(id) {
     }
 
     // se o id já existir
-    const response = await fetch("/leitura");
-    const registros = await response.json();
+    const registros = await carregarJson();
 
     if (registros.find(item => item.id === id)) {
         // mostra mensagem de erro
@@ -184,8 +216,7 @@ async function criarFormulario(id) {
 };
 
 async function pegarFormulario(id) {
-    const response = await fetch("/leitura");
-    const registros = await response.json();
+    const registros = await carregarJson();
 
     if (!registros.length) {
         M.toast({ html: "Não há registros", displayLength: 4000 });
@@ -208,13 +239,12 @@ async function pegarFormulario(id) {
 };
 
 async function carregarDados(id) {
-    const response = await fetch("/leitura");
-    const registros = await response.json();
+    const registros = await carregarJson();
     const registro = registros.find(item => item.id === id);
 
     // atualiza contadores
-    contFormacao = registro.formacoes ? Object.keys(registro.formacoes).length + 1: 0;
-    contProjeto = registro.projetos ? Object.keys(registro.projetos).length / 2: 0;
+    contFormacao = registro.formacoes ? Object.keys(registro.formacoes).length + 1 : 0;
+    contProjeto = registro.projetos ? Object.keys(registro.projetos).length / 2 : 0;
     contProjeto = contProjeto + 1;
 
     if (!registro) {
@@ -239,7 +269,7 @@ async function carregarDados(id) {
     // Formação
     $("#formacao-container").empty();
     if (registro.formacoes && typeof registro.formacoes === "object") {
-        
+
         Object.entries(registro.formacoes).forEach(([key, valor], idx) => {
             if (valor && valor.trim() !== "") {   // verifica se está vazio
                 const campo = `
@@ -263,7 +293,7 @@ async function carregarDados(id) {
     $("#projeto-container").empty();
     if (registro.projetos && typeof registro.projetos === "object") {
         const projetoLink = {};
-        
+
         Object.entries(registro.projetos).forEach(([key, valor]) => {
             const match = key.match(/^projeto(\d+)$/);
             const matchLink = key.match(/^link-projeto(\d+)$/);
