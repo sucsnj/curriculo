@@ -73,6 +73,7 @@ curl -X POST http://localhost:5000/submit \
 ├── app.js
 ├── package.json
 ├── package-lock.json
+├── LICENSE
 ├── .env *
 ├── dados.json *
 ├── node_modules *
