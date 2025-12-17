@@ -294,28 +294,54 @@ async function atualizarFormulario(id) {
 
 async function preencherFormulario() {
     const formulario = {};
-    const formacoes = [];
-    const projetos = [];
-    const links = [];
+    const formacoes = {};
+    const projetos = {};
 
+    // formulário base
     $("#formulario [id]").each(function () {
         const id = $(this).attr("id");
         const valor = $(this).val();
 
-        if (id.startsWith("formacao")) {
-            formacoes.push(valor);
-        } else if (id.startsWith("projeto")) {
-            projetos.push(valor);
-        } else if (id.startsWith("link")) {
-            links.push(valor);
-        } else {
-            formulario[id] = valor;
+        formulario[id] = valor;
+    });
+    Object.keys(formulario).forEach(key => {
+        if (key.startsWith("formacao")) {
+            delete formulario[key];
+        } else if (key.startsWith("projeto")) {
+            delete formulario[key];
+        } else if (key.startsWith("link-projeto")) {
+            delete formulario[key];
+        }
+    });
+
+    // formações
+    $("#formacao-container [id]").each(function () {
+        const id = $(this).attr("id");
+        const valor = $(this).val();
+
+        formacoes[id] = valor;
+    });
+    Object.keys(formacoes).forEach(key => {
+        if (key.startsWith("btn")) {
+            delete formacoes[key];
+        }
+    });
+
+    // projetos e links
+    $("#projeto-container [id]").each(function () {
+        const id = $(this).attr("id");
+        const valor = $(this).val();
+
+        projetos[id] = valor;
+    });
+    Object.keys(projetos).forEach(key => {
+        if (key.startsWith("btn")) {
+            delete projetos[key];
         }
     });
 
     formulario.formacoes = formacoes;
     formulario.projetos = projetos;
-    formulario.links = links;
     return formulario;
 }
 
