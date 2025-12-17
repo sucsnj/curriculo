@@ -247,6 +247,10 @@ async function carregarDados(id) {
                         <textarea id="${key}" name="${key}" class="materialize-textarea">${valor}</textarea>
                         <label for="${key}" class="active">Formação ${idx + 1}</label>
                     </div>
+
+                    <button id="btn-remover-formacao${key}" class="btn waves-effect waves-light red">
+                        Remover
+                    </button>
                 </div>
                 `;
                 $("#formacao-container").append(campo);
@@ -286,6 +290,10 @@ async function carregarDados(id) {
                     <input id="link-projeto${idx}" name="link-projeto${idx}" type="url" value="${proj.link || ""}">
                     <label for="link-projeto${idx}" class="active">Link Projeto ${idx}</label>
                 </div>
+
+                <button id="btn-remover-projeto${idx}" class="btn waves-effect waves-light red">
+                    Remover
+                </button>
             </div>
             `;
             $("#projeto-container").append(campo);
@@ -308,6 +316,35 @@ async function atualizarFormulario(id) {
             delete formulario[key];
         }
     });
+
+    // normalizar campos de formação
+    const valoresFormacao = Object.values(formulario.formacoes);
+    const formacaoId = {};
+    valoresFormacao.forEach((valor, idx) => {
+        formacaoId[`formacao${idx + 1}`] = valor;
+    });
+    formulario.formacoes = formacaoId;
+
+    // normalizar campos de projetos e links
+    const entradasProjeto = Object.entries(formulario.projetos)
+        .sort((a, b) => {
+            const numA = parseInt(a[0].replace(/\D/g, ""), 10);
+            const numB = parseInt(b[0].replace(/\D/g, ""), 10);
+            return numA - numB;
+        });
+    const projetoId = {};
+    let contador = 1;
+    for (let i = 0; i < entradasProjeto.length; i++) {
+        const [chave, valor] = entradasProjeto[i];
+        if (chave.startsWith("projeto")) {
+            projetoId[`projeto${contador}`] = valor;
+        }
+        if (chave.startsWith("link-projeto")) {
+            projetoId[`link-projeto${contador}`] = valor;
+            contador++;
+        }
+    }
+    formulario.projetos = projetoId;
 
     const response = await fetch("/atualizar", {
         method: "PATCH",
