@@ -220,38 +220,38 @@ async function carregarDados(id) {
         });
     }
 
-    // Projetos
+    // Projetos e Links
     $("#projeto-container").empty();
     if (Array.isArray(registro.projetos)) {
         registro.projetos.forEach((p, i) => {
             if (p && p.trim() !== "") {
-                const campo = `
-        <div class="row projeto-div">
-          <div class="input-field col s12">
-            <textarea id="projeto${i}" name="projeto${i}" class="materialize-textarea">${p}</textarea>
-            <label for="projeto${i}" class="active">Projeto ${i}</label>
-          </div>
-        </div>
-      `;
-                $("#projeto-container").append(campo);
-            }
-        });
-    }
+                // bloco do projeto
+                let campo = `
+                <div class="row projeto-div">
+                <div class="input-field col s12">
+                    <textarea id="projeto${i}" name="projeto${i}" class="materialize-textarea">${p}</textarea>
+                    <label for="projeto${i}" class="active">Projeto ${i}</label>
+                </div>
+                </div>
+            `;
 
-    // Links
-    $("#links-container").empty();
-    if (Array.isArray(registro.links)) {
-        registro.links.forEach((l, i) => {
-            if (l && l.trim() !== "") {
-                const campo = `
-        <div class="row link-div">
-          <div class="input-field col s12">
-            <input id="link${i}" name="link${i}" type="url" value="${l}">
-            <label for="link${i}" class="active">Link ${i}</label>
-          </div>
-        </div>
-      `;
-                $("#links-container").append(campo);
+                // se houver link correspondente, adiciona logo abaixo
+                if (Array.isArray(registro.links) && registro.links[i] && registro.links[i].trim() !== "") {
+                        campo += `
+                        <div class="row link-div">
+                            <div class="input-field col s12">
+                            <input id="link${i}" name="link${i}" type="url" value="${registro.links[i]}">
+                            <label for="link${i}" class="active">Link ${i}</label>
+                            </div>
+                        </div>
+                        `;
+                    }
+                    campo += `
+                    <button id="btn-remover-projeto${i}" class="btn waves-effect waves-light red">
+                        Remover
+                    </button>
+                    `
+                    $("#projeto-container").append(campo);
             }
         });
     }
