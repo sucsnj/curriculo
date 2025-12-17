@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     M.textareaAutoResize(textNeedResize[0]); // aplica autoresize
 });
 
-let camposFormacao = [];
 let contFormacao = 1;
 let contProjeto = 1;
 
@@ -11,10 +10,10 @@ $(document).ready(function () {
     $('.modal').modal();
 
     // delegação para remover formação
-    $("#formacao-container").on("click", "button[id^='btn-remover-formacao']", function () {
+    $("#formacao-container").on("click", "button[id^='btn-remover-formacao']", async function () {
         $(this).closest(".formacao-div").remove();
     });
-    $("#projeto-container").on("click", "button[id^='btn-remover-projeto']", function () {
+    $("#projeto-container").on("click", "button[id^='btn-remover-projeto']", async function () {
         $(this).closest(".projeto-div").remove();
     });
 
@@ -125,7 +124,36 @@ async function criarFormulario(id) {
         }
     });
 
-    // se todos os inputs tiverem valor
+    // normalizar campos de formação
+    const valoresFormacao = Object.values(formulario.formacoes);
+    const formacaoId = {};
+    valoresFormacao.forEach((valor, idx) => {
+        formacaoId[`formacao${idx + 1}`] = valor;
+    });
+    formulario.formacoes = formacaoId;
+
+    // normalizar campos de projetos e links
+    const entradasProjeto = Object.entries(formulario.projetos)
+        .sort((a, b) => {
+            const numA = parseInt(a[0].replace(/\D/g, ""), 10);
+            const numB = parseInt(b[0].replace(/\D/g, ""), 10);
+            return numA - numB;
+        });
+    const projetoId = {};
+    let contador = 1;
+    for (let i = 0; i < entradasProjeto.length; i++) {
+        const [chave, valor] = entradasProjeto[i];
+        if (chave.startsWith("projeto")) {
+            projetoId[`projeto${contador}`] = valor;
+        }
+        if (chave.startsWith("link-projeto")) {
+            projetoId[`link-projeto${contador}`] = valor;
+            contador++;
+        }
+    }
+    formulario.projetos = projetoId;
+
+    // se nome e idade estiverem vazios, retorna mensagem de erro
     if (formulario.nome && formulario.idade) {
         // faz fetch para enviar dados
         const response = await fetch("/submit", {
@@ -204,57 +232,62 @@ async function carregarDados(id) {
     // agora trata os arrays dinâmicos (criados pelo javascript)
     // Formação
     $("#formacao-container").empty();
-    if (Array.isArray(registro.formacoes)) {
-        registro.formacoes.forEach((f, i) => {
-            if (f && f.trim() !== "") {   // verifica se está vazio
+    if (registro.formacoes && typeof registro.formacoes === "object") {
+        
+        Object.entries(registro.formacoes).forEach(([key, valor], idx) => {
+            if (valor && valor.trim() !== "") {   // verifica se está vazio
                 const campo = `
-        <div class="row formacao-div">
-          <div class="input-field col s12">
-            <textarea id="formacao${i}" name="formacao${i}" class="materialize-textarea">${f}</textarea>
-            <label for="formacao${i}" class="active">Formação ${i}</label>
-          </div>
-        </div>
-      `;
+                <div class="row formacao-div">
+                    <div class="input-field col s12">
+                        <textarea id="${key}" name="${key}" class="materialize-textarea">${valor}</textarea>
+                        <label for="${key}" class="active">Formação ${idx + 1}</label>
+                    </div>
+                </div>
+                `;
                 $("#formacao-container").append(campo);
             }
         });
     }
 
-    // Projetos
+    // projetos e links
     $("#projeto-container").empty();
-    if (Array.isArray(registro.projetos)) {
-        registro.projetos.forEach((p, i) => {
-            if (p && p.trim() !== "") {
-                const campo = `
-        <div class="row projeto-div">
-          <div class="input-field col s12">
-            <textarea id="projeto${i}" name="projeto${i}" class="materialize-textarea">${p}</textarea>
-            <label for="projeto${i}" class="active">Projeto ${i}</label>
-          </div>
-        </div>
-      `;
-                $("#projeto-container").append(campo);
+    if (registro.projetos && typeof registro.projetos === "object") {
+        const projetoLink = {};
+        
+        Object.entries(registro.projetos).forEach(([key, valor]) => {
+            const match = key.match(/^projeto(\d+)$/);
+            const matchLink = key.match(/^link-projeto(\d+)$/);
+
+            if (match) {
+                const idx = match[1];
+                projetoLink[idx] = projetoLink[idx] || {};
+                projetoLink[idx].projeto = valor;
             }
+            if (matchLink) {
+                const idx = matchLink[1];
+                projetoLink[idx] = projetoLink[idx] || {};
+                projetoLink[idx].link = valor;
+            }
+        });
+
+        Object.entries(projetoLink).forEach(([idx, proj]) => {
+            const campo = `
+            <div class="row projeto-div">
+                <div class="input-field col s6">
+                    <textarea id="projeto${idx}" name="projeto${idx}" class="materialize-textarea">${proj.projeto || ""}</textarea>
+                    <label for="projeto${idx}" class="active">Projeto ${idx}</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="link-projeto${idx}" name="link-projeto${idx}" type="url" value="${proj.link || ""}">
+                    <label for="link-projeto${idx}" class="active">Link Projeto ${idx}</label>
+                </div>
+            </div>
+            `;
+            $("#projeto-container").append(campo);
         });
     }
 
-    // Links
-    $("#links-container").empty();
-    if (Array.isArray(registro.links)) {
-        registro.links.forEach((l, i) => {
-            if (l && l.trim() !== "") {
-                const campo = `
-        <div class="row link-div">
-          <div class="input-field col s12">
-            <input id="link${i}" name="link${i}" type="url" value="${l}">
-            <label for="link${i}" class="active">Link ${i}</label>
-          </div>
-        </div>
-      `;
-                $("#links-container").append(campo);
-            }
-        });
-    }
+    // atualiza contadores
 
     M.updateTextFields();
 }
@@ -366,7 +399,7 @@ async function adicionarFormacao() {
     `;
 
     $("#formacao-container").append(novoCampo);
-    contFormacao++;
+    contFormacao = contFormacao + 1;
 }
 
 async function adicionarProjeto() {
