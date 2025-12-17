@@ -8,13 +8,13 @@ API simples para criação de pdf de currículos
 1. Instale o [Node.js](https://nodejs.org/en/)
 2. Faça um clone desse repositório/fork
 3. Entre na pasta do projeto e execute `npm install`
-4. Opional: Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo
+4. Opcional: Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo
 ```
 PORT=5000
 ```
 5. Execute `npm start`
-5.1 Opional: Instale o nodemon `npm install -g nodemon`
-5.2 Opional: Execute `npm run dev` para iniciar o servidor em modo de desenvolvimento
+5.1 Opcional: Instale o nodemon `npm install -g nodemon`
+5.2 Opcional: Execute `npm run dev` para iniciar o servidor em modo de desenvolvimento
 6. Acesse a aplicação em `http://localhost:5000`
 
 ## Requisitos
