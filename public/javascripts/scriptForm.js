@@ -4,27 +4,19 @@ $(document).ready(function () {
     aplicarMascaras();
 
     $("#pdf").click(function () {
-        const element = document.querySelector(".curriculo");
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pdfName = `${dadosId}.pdf`;
 
-        // configurações do PDF 
-        const opt = {
-            margin: 0.5,
-            filename: 'curriculo.pdf',
-            image: {
-                type: 'jpeg',
-                quality: 0.98
+        pdf.html(document.querySelector(".curriculo"), {
+            callback: function (doc) {
+                doc.save(pdfName);
             },
-            html2canvas: { scale: 2 },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
-        // gera e baixa o PDF 
-        html2pdf().set(opt).from(element).save();
+            x: 10,
+            y: 10,
+            html2canvas: { scale: 0.2 }
+        });
     });
-
 });
 
 // função para pegar o formulário
@@ -47,8 +39,8 @@ async function curriculo(id) {
     $("#cep").text(registro.cep);
     $("#cidade").text(`${registro.cidade} - ${registro.estado}`);
     $("#nacionalidade").text(registro.nacionalidade);
-    $("#urllinkedin").html(`<a href="${registro.urllinkedin}" target="_blank">LinkedIn</a>`);
-    $("#github").html(`<a href="${registro.github}" target="_blank">GitHub</a>`);
+    $("#urllinkedin").html(`<a href="${registro.urllinkedin}" target="_blank">${registro.urllinkedin}</a>`);
+    $("#github").html(`<a href="${registro.github}" target="_blank">${registro.github}</a>`);
     $("#resumo").text(registro.resumo);
 
     // formações
@@ -66,12 +58,8 @@ async function curriculo(id) {
     // links dos projetos
     $("#links").empty();
     registro.links.forEach(l => {
-        // $("#links").append(`<li class="collection-item"><a href="${l}" target="_blank">${l}</a></li>`);
         $("#links").append(`<p><a href="${l}" target="_blank">${l}</a></p>`);
     });
-
-    // tecnologias dos projetos
-    //TODO
 
     $("#tecnologias").text(registro.tecnologias);
     $("#complementar").text(registro.complementar);
