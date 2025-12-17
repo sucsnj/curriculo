@@ -125,6 +125,18 @@ async function limparFormulario() {
     $("#formacao-container").empty();
     $("#projeto-container").empty();
 
+    // reseta contadores
+    contFormacao = 1;
+    contProjeto = 1;
+
+    const registros = await carregarJson();
+
+    // atualiza contadores
+    contFormacao = registros.formacoes ? Object.keys(registros.formacoes).length + 1 : 0;
+    contFormacao = contFormacao + 1;
+    contProjeto = registros.projetos ? Object.keys(registros.projetos).length / 2 : 0;
+    contProjeto = contProjeto + 1;
+
     // remove classes de validação do Materialize
     $("#formulario input, #formulario textarea").each(function () {
         $(this).removeClass("valid invalid");
