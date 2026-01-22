@@ -66,6 +66,7 @@ async function curriculo(id) {
     }
 
     $("#competencias").text(registro.competencias);
+    $("#comportamentos").text(registro.comportamentos);
 
     // projetos e links
     $("#projeto").empty();
