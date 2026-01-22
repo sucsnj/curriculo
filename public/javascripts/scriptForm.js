@@ -65,6 +65,8 @@ async function curriculo(id) {
         });
     }
 
+    $("#competencias").text(registro.competencias);
+
     // projetos e links
     $("#projeto").empty();
     if (registro.projetos && typeof registro.projetos === "object") {
