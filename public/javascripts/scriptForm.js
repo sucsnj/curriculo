@@ -54,6 +54,17 @@ async function curriculo(id) {
         });
     }
 
+    // experiência profissional
+    $("#experiencia").empty(); // limpa o conteúdo anterior
+    if (registro.experiencia && typeof registro.experiencia === "object") {
+        Object.entries(registro.experiencia).forEach(([key, valor]) => {
+            if (valor && valor.trim() !== "") {
+                const campo = `<p id="${key}">${valor}</p>`;
+                $("#experiencia").append(campo);
+            }
+        });
+    }
+
     // projetos e links
     $("#projeto").empty();
     if (registro.projetos && typeof registro.projetos === "object") {

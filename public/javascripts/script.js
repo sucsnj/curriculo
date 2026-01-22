@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 let contFormacao = 1;
+let contExperiencia = 1;
 let contProjeto = 1;
 
 $(document).ready(async function () {
@@ -12,6 +13,10 @@ $(document).ready(async function () {
     // delegação para remover formação
     $("#formacao-container").on("click", "button[id^='btn-remover-formacao']", async function () {
         $(this).closest(".formacao-div").remove();
+    });
+    // delegação para remover experiência
+    $("#experiencia-container").on("click", "button[id^='btn-remover-experiencia']", async function () {
+        $(this).closest(".experiencia-div").remove();
     });
     // delegação para remover projeto e link
     $("#projeto-container").on("click", "button[id^='btn-remover-projeto']", async function () {
@@ -79,6 +84,11 @@ $(document).ready(async function () {
         await adicionarFormacao();
     });
 
+    $("#btn-experiencia").off('click').on('click', async function (event) {
+        event.preventDefault();
+        await adicionarExperiencia();
+    });
+
     $("#btn-projeto").off('click').on('click', async function (event) {
         event.preventDefault();
         await adicionarProjeto();
@@ -123,10 +133,12 @@ async function limparFormulario() {
     });
 
     $("#formacao-container").empty();
+    $("#experiencia-container").empty();
     $("#projeto-container").empty();
 
     // reseta contadores
     contFormacao = 1;
+    contExperiencia = 1;
     contProjeto = 1;
 
     const registros = await carregarJson();
@@ -134,6 +146,8 @@ async function limparFormulario() {
     // atualiza contadores
     contFormacao = registros.formacoes ? Object.keys(registros.formacoes).length + 1 : 0;
     contFormacao = contFormacao + 1;
+    contExperiencia = registros.experiencia ? Object.keys(registros.experiencia).length + 1 : 0;
+    contExperiencia = contExperiencia + 1;
     contProjeto = registros.projetos ? Object.keys(registros.projetos).length / 2 : 0;
     contProjeto = contProjeto + 1;
 
@@ -196,6 +210,14 @@ async function criarFormulario(id) {
         formacaoId[`formacao${idx + 1}`] = valor;
     });
     formulario.formacoes = formacaoId;
+
+    // normalizar campos de experiência
+    const valoresexperiencia = Object.values(formulario.experiencia);
+    const experienciaId = {};
+    valoresexperiencia.forEach((valor, idx) => {
+        experienciaId[`experiencia${idx + 1}`] = valor;
+    });
+    formulario.experiencia = experienciaId;
 
     // normalizar campos de projetos e links
     const entradasProjeto = Object.entries(formulario.projetos)
@@ -276,6 +298,7 @@ async function carregarDados(id) {
 
     // atualiza contadores
     contFormacao = registro.formacoes ? Object.keys(registro.formacoes).length + 1 : 0;
+    contExperiencia = registro.experiencia ? Object.keys(registro.experiencia).length + 1 : 0;
     contProjeto = registro.projetos ? Object.keys(registro.projetos).length / 2 : 0;
     contProjeto = contProjeto + 1;
 
@@ -317,6 +340,29 @@ async function carregarDados(id) {
                 </div>
                 `;
                 $("#formacao-container").append(campo);
+            }
+        });
+    }
+
+    // experiência profissional
+    $("#experiencia-container").empty();
+    if (registro.experiencia && typeof registro.experiencia === "object") {
+
+        Object.entries(registro.experiencia).forEach(([key, valor], idx) => {
+            if (valor && valor.trim() !== "") {   // verifica se está vazio
+                const campo = `
+                <div class="row experiencia-div">
+                    <div class="input-field col s12">
+                        <textarea id="${key}" name="${key}" class="materialize-textarea">${valor}</textarea>
+                        <label for="${key}" class="active">Experiência ${idx + 1}</label>
+                    </div>
+
+                    <button id="btn-remover-experiencia${key}" class="btn waves-effect waves-light red">
+                        Remover
+                    </button>
+                </div>
+                `;
+                $("#experiencia-container").append(campo);
             }
         });
     }
@@ -388,6 +434,14 @@ async function atualizarFormulario(id) {
     });
     formulario.formacoes = formacaoId;
 
+    // normalizar campos de experiência
+    const valoresexperiencia = Object.values(formulario.experiencia);
+    const experienciaId = {};
+    valoresexperiencia.forEach((valor, idx) => {
+        experienciaId[`experiencia${idx + 1}`] = valor;
+    });
+    formulario.experiencia = experienciaId;
+
     // normalizar campos de projetos e links
     const entradasProjeto = Object.entries(formulario.projetos)
         .sort((a, b) => {
@@ -433,6 +487,7 @@ async function atualizarFormulario(id) {
 async function preencherFormulario() {
     const formulario = {};
     const formacoes = {};
+    const experiencia = {};
     const projetos = {};
 
     // formulário base
@@ -444,6 +499,8 @@ async function preencherFormulario() {
     });
     Object.keys(formulario).forEach(key => {
         if (key.startsWith("formacao")) {
+            delete formulario[key];
+        } else if (key.startsWith("experiencia")) {
             delete formulario[key];
         } else if (key.startsWith("projeto")) {
             delete formulario[key];
@@ -465,6 +522,19 @@ async function preencherFormulario() {
         }
     });
 
+    // experiência profissional
+    $("#experiencia-container [id]").each(function () {
+        const id = $(this).attr("id");
+        const valor = $(this).val();
+
+        experiencia[id] = valor;
+    });
+    Object.keys(experiencia).forEach(key => {
+        if (key.startsWith("btn")) {
+            delete experiencia[key];
+        }
+    });
+
     // projetos e links
     $("#projeto-container [id]").each(function () {
         const id = $(this).attr("id");
@@ -479,6 +549,7 @@ async function preencherFormulario() {
     });
 
     formulario.formacoes = formacoes;
+    formulario.experiencia = experiencia;
     formulario.projetos = projetos;
     return formulario;
 }
@@ -505,6 +576,24 @@ async function adicionarFormacao() {
 
     $("#formacao-container").append(novoCampo);
     contFormacao = contFormacao + 1;
+}
+
+async function adicionarExperiencia() {
+    const novoCampo = `
+        <div class="row experiencia-div">
+            <div class="input-field col s12">
+                <textarea id="experiencia${contExperiencia}" name="experiencia${contExperiencia}" class="materialize-textarea"></textarea>
+                <label for="experiencia${contExperiencia}">Experiência ${contExperiencia}</label>
+            </div>
+
+            <button id="btn-remover-experiencia${contExperiencia}" class="btn waves-effect waves-light red">
+                Remover
+            </button>
+        </div>
+    `;
+
+    $("#experiencia-container").append(novoCampo);
+    contExperiencia = contExperiencia + 1;
 }
 
 async function adicionarProjeto() {
