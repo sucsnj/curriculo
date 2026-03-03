@@ -5,7 +5,7 @@ API simples para criação de pdf de currículos
 ![Node.js](https://img.shields.io/badge/Node.js-18-green)
 
 ## Instalação
-1. Instale o [Node.js](https://nodejs.org/en/)
+1. Instale o [Node.js](https://nodejs.org/en/) **versão 22.x**
 2. Faça um clone desse repositório/fork
 3. Entre na pasta do projeto e execute `npm install`
 4. Opcional: Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo
@@ -65,6 +65,7 @@ curl -X POST http://localhost:5000/submit \
 - HTML2Canvas
 - JSPDF
 - Express (Node.js)
+- Multer
 
 ## Estrutura do projeto
 ```
@@ -84,6 +85,8 @@ curl -X POST http://localhost:5000/submit \
 │   │   └── script.js
 │   ├── stylesheets
 │   │   └── style.css
+│   ├── images
+│   │   └── foto.jpg
 │   └── views
 │       ├── form.ejs
 │       ├── index.ejs
