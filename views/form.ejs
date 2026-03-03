@@ -10,38 +10,47 @@
 
 <body>
   <div class="curriculo">
+    
     <!-- Cabeçalho -->
     <header class="header-blue">
       <div class="row">
-        <!-- Nome em destaque -->
-        <div class="col s12">
-          <h4 id="nome">Nome Completo</h4>
+        <!-- Coluna da foto -->
+        <div class="col s3 center-align">
+          <img id="foto" src="/images/foto.jpg" alt="Foto 3x4" class="responsive-img"
+            style="width:90px; height:120px; object-fit:cover;">
+        </div>
+
+        <!-- Coluna dos dados -->
+        <div class="col s9">
+          <div class="row">
+            <div class="col s12 center-align">
+              <h5 id="nome">Nome Completo</h5>
+            </div>
+          </div>
+
+          <div class="row info-basica">
+            <div class="col s12 center-align">
+              <span id="idade">Idade em anos</span> |
+              <span id="telefone">(99) 98888-7777</span> |
+              <span id="email">email@email.com</span>
+            </div>
+          </div>
+
+          <div class="row info-basica">
+            <div class="col s12 center-align">
+              <span id="logradouro">Rua Exemplo, 123</span> |
+              <span id="cep">12345-678</span> |
+              <span id="cidade">Cidade - UF</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="row">
-        <!-- Primeira coluna -->
-        <div class="col s6">
-          <p id="idade">Idade em anos</p>
-          <p id="telefone">(99) 98888-7777</p>
-          <p id="email">email@email.com</p>
-        </div>
-
-        <!-- Segunda coluna -->
-        <div class="col s6">
-          <p id="logradouro">Rua Exemplo, 123</p>
-          <p id="cep">12345-678</p>
-          <p id="cidade">Cidade - UF</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <!-- Links profissionais -->
-        <div class="col s6">
-          <p id="urllinkedin">linkedin.com/</p>
-        </div>
-        <div class="col s6">
-          <p id="github">github.com/</p>
+      <!-- Linha separada para LinkedIn e GitHub -->
+      <div class="row info-basica">
+        <div class="col s12 center-align">
+          <span id="urllinkedin">linkedin.com/</span> |
+          <span id="github">github.com/</span>
         </div>
       </div>
     </header>
@@ -84,10 +93,10 @@
     </section>
 
     <!-- Tecnologias -->
-    <section>
+    <!-- <section>
       <h5>Tecnologias</h5>
       <p id="tecnologias">Lista de tecnologias dominadas.</p>
-    </section>
+    </section> -->
 
     <!-- Experiência Complementar -->
     <section>

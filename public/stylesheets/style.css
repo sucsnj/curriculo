@@ -56,3 +56,60 @@ section h5 {
 #github a:hover {
   color: #90caf9; /* azul claro ao passar o mouse */
 }
+
+header.header-blue {
+  padding: 10px 0;
+}
+
+header .info-basica {
+  margin: 0; /* remove espaçamento vertical extra */
+}
+
+header .info-basica span {
+  font-size: 0.9rem; /* menor que o nome */
+  margin: 0 5px;
+}
+
+header h5 {
+  margin: 0;
+  font-weight: bold;
+}
+
+#foto {
+  width: 90px;
+  height: 120px;
+  object-fit: cover;
+}
+
+/* regra global para reduzir todas as fontes */
+body {
+  background: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem; /* diminui levemente o tamanho padrão */
+}
+
+/* títulos ainda precisam se destacar */
+header h5,
+section h5 {
+  font-size: 1.2rem; /* mantém destaque, mas menor que o padrão */
+}
+
+header h4 {
+  font-size: 1.4rem; /* nome continua maior */
+}
+
+header .info-basica span {
+  font-size: 0.85rem; /* reduz ainda mais os detalhes */
+}
+
+header .col.s3,
+header .col.s9 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+header .col.s9 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centraliza verticalmente */
+}
