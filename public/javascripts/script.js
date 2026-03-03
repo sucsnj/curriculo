@@ -242,15 +242,29 @@ async function criarFormulario(id) {
 
     // se nome e idade estiverem vazios, retorna mensagem de erro
     if (formulario.nome && formulario.idade) {
+        // Criar FormData para suportar upload de arquivo
+        const formData = new FormData();
+        
+        // Adicionar todos os dados do formulário
+        Object.keys(formulario).forEach(key => {
+            if (key === 'foto') {
+                // Pegar o arquivo do input
+                const fotoInput = document.getElementById('foto');
+                if (fotoInput.files && fotoInput.files[0]) {
+                    formData.append('foto', fotoInput.files[0]);
+                }
+            } else if (typeof formulario[key] === 'object') {
+                formData.append(key, JSON.stringify(formulario[key]));
+            } else {
+                formData.append(key, formulario[key]);
+            }
+        });
+
         // faz fetch para enviar dados
         const response = await fetch("/submit", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                ...formulario
-            })
+            body: formData
+            // Não especificar Content-Type para FormData - o navegador configura automaticamente
         });
 
         data = await response.json();
@@ -463,12 +477,28 @@ async function atualizarFormulario(id) {
     }
     formulario.projetos = projetoId;
 
+    // Criar FormData para suportar upload de arquivo
+    const formData = new FormData();
+    
+    // Adicionar todos os dados do formulário
+    Object.keys(formulario).forEach(key => {
+        if (key === 'foto') {
+            // Pegar o arquivo do input
+            const fotoInput = document.getElementById('foto');
+            if (fotoInput.files && fotoInput.files[0]) {
+                formData.append('foto', fotoInput.files[0]);
+            }
+        } else if (typeof formulario[key] === 'object') {
+            formData.append(key, JSON.stringify(formulario[key]));
+        } else {
+            formData.append(key, formulario[key]);
+        }
+    });
+
     const response = await fetch("/atualizar", {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ ...formulario })
+        body: formData
+        // Não especificar Content-Type para FormData - o navegador configura automaticamente
     });
 
     const data = await response.json();
